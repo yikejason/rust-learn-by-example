@@ -3,7 +3,7 @@ syntax = "proto3";
 package abi; // 这个名字回被用作编译结果，prost 会产生: abi.rs
 
 // 一个 ImageSpec 是一个有序的数组，服务器按照 spec 的顺序处理
-message ImageSpec { repeated Spec spec = 1;}
+message ImageSpec { repeated Spec specs = 1;}
 
 // 处理图片改变大小
 message Resize {
@@ -11,13 +11,13 @@ message Resize {
   uint32 height = 2;
 
   enum ResizeType {
-    NORML = 0;
+    NORMAL = 0;
     SEAM_CARVE = 1;
   }
 
   ResizeType rtype = 3;
 
-  enum SampFilter {
+  enum SampleFilter {
     UNDEFINED = 0;
     NEAREST = 1;
     TRIANGLE = 2;
@@ -26,7 +26,7 @@ message Resize {
     LANCZOS3 = 5;
   }
 
-  SampFilter filter = 4;
+  SampleFilter filter = 4;
 }
 
 // 处理图片截取
@@ -65,11 +65,13 @@ message Watermark {
 
 // 一个 spec 可以包含上述处理方式之一
 message Spec {
-  Resize resize = 1;
-  Crop crop = 2;
-  Flipv flipv = 3;
-  Fliph fliph = 4;
-  Contrast contrast = 5;
-  Filter filter = 6;
-  Watermark watermark = 7;
+  oneof data {
+    Resize resize = 1;
+    Crop crop = 2;
+    Flipv flipv = 3;
+    Fliph fliph = 4;
+    Contrast contrast = 5;
+    Filter filter = 6;
+    Watermark watermark = 7;
+  }
 }
